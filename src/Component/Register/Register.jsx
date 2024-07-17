@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const Paymentpage = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
     pin: '',
@@ -122,4 +122,4 @@ const Paymentpage = () => {
   );
 };
 
-export default Paymentpage;
+export default Register;
