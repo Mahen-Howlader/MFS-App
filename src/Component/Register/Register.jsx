@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 
 const Register = () => {
@@ -31,7 +32,7 @@ const Register = () => {
   };
 
 // console.log(import.meta.env.VITE_API)
-  const { mutate } = useMutation({
+  const { mutate,isPending  } = useMutation({
     mutationFn: async (userInfo) => {
       const res = await axios.post(`${import.meta.env.VITE_API}/registration`, userInfo);
       return res.data;
@@ -115,7 +116,7 @@ const Register = () => {
           {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         </div>
         <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700">
-          Register
+        {isPending ? <ClipLoader size={20} color={"#ffffff"} /> : "Register"}
         </button>
       </form>
     </div>
