@@ -31,8 +31,8 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-// console.log(import.meta.env.VITE_API)
-  const { mutate,isPending  } = useMutation({
+  // console.log(import.meta.env.VITE_API)
+  const { mutate, isPending } = useMutation({
     mutationFn: async (userInfo) => {
       const res = await axios.post(`${import.meta.env.VITE_API}/registration`, userInfo);
       return res.data;
@@ -40,24 +40,29 @@ const Register = () => {
     onSuccess: async (data) => {
       // Choose one notification method
       console.log(data.insertedId)
-      if(data.insertedId){
+      if (data.insertedId) {
         toast.success("Register successfully"); // Or alert("Register successfully"); 
       }
     },
     onError: (error) => {
-      toast.error("Registration Failed!", error.response?.data?.message || error.message); // Provide user-friendly error message
+
+      if(error?.response?.data?.error){
+        return  toast.error(error?.response?.data?.error && error?.response?.data?.error); 
+      }else{
+        toast.error("Tegister Failed!"); 
+      }
     },
   });
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (validate()) {
       console.log("Form Data Submitted:", formData); // Log form data for debugging (optional)
       // console.log("Request URL:", `${import.meta.env.VITE_API}/registration`);
       // const res = await axios.post(`${import.meta.env.VITE_API}/registration`, formData);
-      
-      
+
+
       try {
         await mutate(formData);  // Use await to handle potential errors
       } catch (error) {
@@ -65,7 +70,7 @@ const Register = () => {
       }
     }
   };
-  
+
 
   return (
     <div className="max-w-md mx-auto mt-10">
@@ -116,7 +121,7 @@ const Register = () => {
           {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
         </div>
         <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700">
-        {isPending ? <ClipLoader size={20} color={"#ffffff"} /> : "Register"}
+          {isPending ? <ClipLoader size={20} color={"#ffffff"} /> : "Register"}
         </button>
       </form>
     </div>
