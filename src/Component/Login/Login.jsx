@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
+
 function Login() {
     const [formData, setFormData] = useState({ useremail: '', password: '' });
     const [errors, setErrors] = useState({ useremail: '', password: '' });
@@ -32,16 +33,26 @@ function Login() {
     };
 
 
+    
+
+
     const { mutate, isPending } = useMutation({
         mutationFn: async (userInfo) => {
             const res = await axios.post(`${import.meta.env.VITE_API}/login`, userInfo);
             return res.data;
         },
         onSuccess: async (data) => {
-            toast.success(data); // Or alert("Register successfully"); 
+            // console.log(data?.data?.email)
+            toast.success(data?.success); // Or alert("Register successfully"); 
+           const jwt =  await axios.post(`${import.meta.env.VITE_API}/jwt`, {email : data?.data});
+           console.log(jwt?.data)
+           console.log(jwt?.data?.result?.token);
+           if(jwt?.data?.status === 201){
+            console.log("lcoalstores")
+           }
         },
         onError: (error) => {
-            console.log(error)
+            // console.log(error)
             if (error?.response?.data?.error) {
                 return toast.error(error?.response?.data?.error && error?.response?.data?.error);
             } else {
