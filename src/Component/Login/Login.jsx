@@ -8,7 +8,11 @@ import { toast } from "react-toastify";
 function Login() {
     const [formData, setFormData] = useState({ useremail: '', password: '' });
     const [errors, setErrors] = useState({ useremail: '', password: '' });
-
+    const [inpVal, setInpVal] = useState({
+        email: "",
+        password: ""
+    })
+    console.log("users",inpVal)
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
@@ -33,7 +37,7 @@ function Login() {
     };
 
 
-    
+
 
 
     const { mutate, isPending } = useMutation({
@@ -44,12 +48,18 @@ function Login() {
         onSuccess: async (data) => {
             // console.log(data?.data?.email)
             toast.success(data?.success); // Or alert("Register successfully"); 
-           const jwt =  await axios.post(`${import.meta.env.VITE_API}/jwt`, {email : data?.data});
-           console.log(jwt?.data)
-           console.log(jwt?.data?.result?.token);
-           if(jwt?.data?.status === 201){
-            console.log("lcoalstores")
-           }
+            const jwt = await axios.post(`${import.meta.env.VITE_API}/jwt`, { email: data?.data });
+            console.log(jwt?.data)
+            // console.log();
+            const token = jwt?.data?.result?.token
+            if (jwt?.data?.status === 201) {
+                console.log("lcoalstores")
+                localStorage.setItem("usersDataToken", token)
+                setInpVal({
+                    ...inpVal, email: "",
+                    password: "",
+                })
+            }
         },
         onError: (error) => {
             // console.log(error)
